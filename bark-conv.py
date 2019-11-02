@@ -221,7 +221,7 @@ class ColorAnimation(object):
         self.component[colorcomp].append(animcomp)
     
     @classmethod
-    def from_btk(cls, f, name, index, rgba_arrays):
+    def from_brk(cls, f, name, index, rgba_arrays):
         coloranim = cls(name, index)
         
         for i, comp in enumerate(("R", "G", "B", "A")):
@@ -238,7 +238,7 @@ class ColorAnimation(object):
         return coloranim
         
     # These functions are used for keeping track of the offset
-    # in the json->btk conversion and are otherwise not useful.
+    # in the json->brk conversion and are otherwise not useful.
     def _set_component_offsets(self, colorcomp, val):
         self._component_offsets[colorcomp] = val
     
@@ -608,7 +608,7 @@ class BRKAnim(object):
         for i in range(register_color_anim_count):
             f.seek(register_color_animation_offset + 0x1C*i)
             name = register_stringtable.strings[i]
-            anim = ColorAnimation.from_btk(f, i, name, (
+            anim = ColorAnimation.from_brk(f, i, name, (
                 values["register"]["R"], values["register"]["G"], values["register"]["B"], values["register"]["A"]
                 ))
             
@@ -617,7 +617,7 @@ class BRKAnim(object):
         for i in range(constant_color_anim_count):
             f.seek(constant_color_animation_offset + 0x1C*i)
             name = constant_stringtable.strings[i]
-            anim = ColorAnimation.from_btk(f, i, name, (
+            anim = ColorAnimation.from_brk(f, i, name, (
                 values["constant"]["R"], values["constant"]["G"], values["constant"]["B"], values["constant"]["A"]
                 ))
             
@@ -631,15 +631,12 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("input",
-                        help="Path to btk or json-formatted text file.")
-    parser.add_argument("--ndigits", default=-1, type=int,
-                        help="The amount of digits after the decimal point to which values should be rounded "
-                             "when converting btk to json. -1 for no rounding.")
+                        help="Path to brk or json-formatted text file.")
     parser.add_argument("output", default=None, nargs = '?',
                         help=(
                             "Path to which the converted file should be written. "
-                            "If input was a BTK, writes a json file. If input was a json file, writes a BTK."
-                            "If left out, output defaults to <input>.json or <input>.btk."
+                            "If input was a BRK, writes a json file. If input was a json file, writes a BRK."
+                            "If left out, output defaults to <input>.json or <input>.brk."
                         ))
 
     args = parser.parse_args()
@@ -660,7 +657,7 @@ if __name__ == "__main__":
         if brk_to_json:
             output = args.input+".json"
         else:
-            output = args.input+".btk"
+            output = args.input+".brk"
     else:
         output = args.output
 
