@@ -676,3 +676,4 @@ if __name__ == "__main__":
             brk = BRKAnim.from_json(f)
         with open(output, "wb") as f:
             brk.write_brk(f)
+        print("Finished writing BRK.")
