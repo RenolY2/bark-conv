@@ -48,7 +48,6 @@ Color values should be between 0 and 255. Values above 255 are theoretically pos
 
 ## Tips
 * Having trouble making animations? Take existing BRKs, change the material name of the animation to one from your model and experiment with it!
-* An angle scale of 1 means you can have rotations between -180 and 180. An angle scale of 2 allows for -360 to 360.
 * For a smooth change from one color value to the next you need three key frames. 
 Example: Color should go from 255 to 0 over 90 frames and then from 0 to 255 over another 90 frames. That means for the outgoing tangent of
 the first frame you use the value 255/90 which rounded to the nearest integer is -3. For the ingoing tangent of the first frame you use 3. 
