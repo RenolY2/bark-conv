@@ -70,7 +70,6 @@ def find_sequence(in_list, seq):
         for j in range(len(seq)):
             #print(in_list[i+j], seq[j])
             if in_list[i+j] == seq[j]:
-                print("match", in_list[i+j], seq[j])
                 if j == len(seq)-1:
                     start = i
                     found = True 
@@ -194,9 +193,6 @@ class AnimComponent(object):
             
         
         else:
-            print("TanType:", tanType)
-            print(len(valarray), offset+index*4)
-            
             if tanType == 0:
                 return cls(valarray[offset + index*3], valarray[offset + index*3 + 1], valarray[offset + index*3 + 2])
             elif tanType == 1:
@@ -378,9 +374,7 @@ class BRKAnim(object):
                             sequence.append(comp.tangentOut)
                     
                     offset = find_sequence(all_values[animtype][colorcomp],sequence)
-                    print("curr sequence:", all_values[animtype][colorcomp])
-                    print("to find sequence:", sequence)
-                    print("found it?", offset)
+
                     if offset == -1:
                         offset = len(all_values[animtype][colorcomp])
                         all_values[animtype][colorcomp].extend(sequence)
@@ -601,7 +595,7 @@ class BRKAnim(object):
                 values[animtype][comp] = []
                 count = component_counts[animtype][comp]
                 f.seek(offsets[animtype][comp])
-                print(animtype, comp, hex(offsets[animtype][comp]), count)
+                #print(animtype, comp, hex(offsets[animtype][comp]), count)
                 for i in range(count):
                     values[animtype][comp].append(read_sint16(f))
         
@@ -641,11 +635,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.ndigits < 0:
-        ndigits = None
-    else:
-        ndigits = args.ndigits
-
 
     with open(args.input, "rb") as f:
         if f.read(8) == BRKFILEMAGIC:
@@ -665,7 +654,7 @@ if __name__ == "__main__":
         with open(args.input, "rb") as f:
             brk = BRKAnim.from_brk(f)
         with open(output, "w") as f:
-            brk.dump(f, digits=ndigits)
+            brk.dump(f)
     else:
         # Detect BOM of input file
         with open(args.input, "rb") as f:
