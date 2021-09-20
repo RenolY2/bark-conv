@@ -202,11 +202,11 @@ class AnimComponent(object):
 
 
 class ColorAnimation(object):
-    def __init__(self, index, name, unknown=0):
+    def __init__(self, index, name, colornum=0):
         self._index = index 
         #self.matindex = matindex 
         self.name = name 
-        self.unknown = unknown 
+        self.colornum = colornum 
         
         self.component = {"R": [], "G": [], "B": [], "A": []}
 
@@ -227,8 +227,8 @@ class ColorAnimation(object):
                 animcomp = AnimComponent.from_array(offset, j, count, rgba_arrays[i], tangent_type)
                 coloranim.add_component(comp, animcomp)
         
-        unknown = read_uint8(f)
-        coloranim.unknown = unknown
+        colornum = read_uint8(f)
+        coloranim.colornum = colornum
         assert f.read(3) == b"\xFF\xFF\xFF"
         
         return coloranim
@@ -272,9 +272,9 @@ class BRKAnim(object):
                 write_indented(f, "\"material_name\": \"{}\",".format(animation.name), level=12)
                 
                 if animtype == "register":
-                    write_indented(f, "\"tev_number\": {},".format(animation.unknown), level=12)
+                    write_indented(f, "\"tevcolor\": {},".format(animation.colornum), level=12)
                 else:
-                    write_indented(f, "\"constant_number\": {},".format(animation.unknown), level=12)
+                    write_indented(f, "\"konstcolor\": {},".format(animation.colornum), level=12)
 
                 write_indented(f, "", level=12)
                 for component_name in ("red", "green", "blue", "alpha"):
@@ -437,7 +437,7 @@ class BRKAnim(object):
                 write_uint16(f, anim._component_offsets[comp]) # Offset into scales
                 write_uint16(f, anim._tangent_type[comp]) # Tangent type, 0 = only TangentIn; 1 = TangentIn and TangentOut
 
-            write_uint8(f, anim.unknown)
+            write_uint8(f, anim.colornum)
             f.write(b"\xFF\xFF\xFF")
         
         f.seek(constant_anim_start)
@@ -447,7 +447,7 @@ class BRKAnim(object):
                 write_uint16(f, anim._component_offsets[comp]) # Offset into scales
                 write_uint16(f, anim._tangent_type[comp]) # Tangent type, 0 = only TangentIn; 1 = TangentIn and TangentOut
 
-            write_uint8(f, anim.unknown)
+            write_uint8(f, anim.colornum)
             f.write(b"\xFF\xFF\xFF")
         
         
@@ -489,7 +489,7 @@ class BRKAnim(object):
                 # Backwards compatibility
                 tev_number = animation["unknown"]
             else:
-                tev_number = animation["tev_number"]
+                tev_number = animation["tevcolor"]
                 
             coloranim = ColorAnimation(
                 i, 
@@ -509,7 +509,7 @@ class BRKAnim(object):
                 # Backwards compatibility
                 constant_number = animation["unknown"]
             else:
-                constant_number = animation["constant_number"]
+                constant_number = animation["konstcolor"]
                 
             coloranim = ColorAnimation(
                 i, 
