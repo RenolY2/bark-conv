@@ -37,7 +37,7 @@ Header:
 
 Animations:
 * material name: Name of the material to which the animation is applied. Name needs to match a material name from the BMD/BDL model to which the BRK belongs
-* unknown: A unknown value, possibly the index of the register or constant color the animation should be applied to
+* tevcolor/konstcolor: The index of the register(TEV) or constant(Konst) color the animation should be applied to. BMD materials have up to four color registers and constant colors (0-3).
 
 BRK works with keyframes. Each entry in the red, green and blue sections is made of a group of 4 values that form a keyframe. 
 First value is the frame number of the keyframe. 
