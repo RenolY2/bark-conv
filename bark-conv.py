@@ -270,7 +270,11 @@ class BRKAnim(object):
                 write_indented(f, "{", level=8)
 
                 write_indented(f, "\"material_name\": \"{}\",".format(animation.name), level=12)
-                write_indented(f, "\"unknown\": {},".format(animation.unknown), level=12)
+                
+                if animtype == "register":
+                    write_indented(f, "\"tev_number\": {},".format(animation.unknown), level=12)
+                else:
+                    write_indented(f, "\"constant_number\": {},".format(animation.unknown), level=12)
 
                 write_indented(f, "", level=12)
                 for component_name in ("red", "green", "blue", "alpha"):
@@ -481,10 +485,16 @@ class BRKAnim(object):
         )
         
         for i, animation in enumerate(brkanimdata["register_color_animations"]):
+            if "unknown" in animation:
+                # Backwards compatibility
+                tev_number = animation["unknown"]
+            else:
+                tev_number = animation["tev_number"]
+                
             coloranim = ColorAnimation(
                 i, 
                 animation["material_name"], 
-                animation["unknown"])
+                tev_number)
             
             for compname in ("red", "green", "blue", "alpha"):
                 comp = compname[0].upper()
@@ -495,10 +505,16 @@ class BRKAnim(object):
             brk.register_animations.append(coloranim)
         
         for i, animation in enumerate(brkanimdata["constant_color_animations"]):
+            if "unknown" in animation:
+                # Backwards compatibility
+                constant_number = animation["unknown"]
+            else:
+                constant_number = animation["constant_number"]
+                
             coloranim = ColorAnimation(
                 i, 
                 animation["material_name"], 
-                animation["unknown"])
+                constant_number)
             
             for compname in ("red", "green", "blue", "alpha"):
                 comp = compname[0].upper()
